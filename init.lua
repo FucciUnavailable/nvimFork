@@ -463,10 +463,11 @@ require('lazy').setup({
   },
 
   -- LSP Plugins
-  {
+  --[[ {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
+    commit = 'HEAD',
     ft = 'lua',
     opts = {
       library = {
@@ -474,7 +475,7 @@ require('lazy').setup({
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
-  },
+  }, --]]
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -698,6 +699,10 @@ require('lazy').setup({
             },
           },
         },
+        -- Add TypeScript LSP for Vue support
+        ts_ls = {},
+        -- Add Vue LSP
+        ['vue-language-server'] = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -716,6 +721,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettierd',
+        'ruff',
+        'vue-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -769,10 +777,14 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'ruff_format' },
+        vue = { 'prettierd' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
       },
     },
   },
@@ -854,7 +866,7 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         },
@@ -944,7 +956,22 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'javascript',
+        'typescript',
+        'vue',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -954,7 +981,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = false },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
