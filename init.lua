@@ -462,7 +462,80 @@ require('lazy').setup({
     end,
   },
 
-  -- LSP Plugins
+  --AMINE ADDED PLUGINS
+  -- File explorer tree
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('nvim-tree').setup()
+      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>')
+    end,
+  },
+
+  -- Show function/class context at top
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = { max_lines = 3 },
+  },
+
+  -- Scrollbar with diagnostics/search highlights on the side
+  {
+    'petertriho/nvim-scrollbar',
+    config = function()
+      require('scrollbar').setup {
+        marks = {
+          Search = { color = 'orange' },
+          Error = { color = 'red' },
+          Warn = { color = 'yellow' },
+          Info = { color = 'blue' },
+          Hint = { color = 'green' },
+        },
+      }
+    end,
+  },
+
+  -- Minimap (code overview on the side)
+  {
+    'gorbit99/codewindow.nvim',
+    config = function()
+      local codewindow = require 'codewindow'
+      codewindow.setup {
+        max_minimap_height = 25,
+        width_multiplier = 4,
+      }
+      vim.keymap.set('n', '<leader>mo', codewindow.toggle_minimap, { desc = 'Toggle minimap' })
+    end,
+  },
+
+  -- Auto-close brackets/quotes
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = {},
+  },
+
+  -- Indent guides
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    opts = {
+      indent = { char = '│' },
+      scope = { show_start = false, show_end = false },
+    },
+  },
+
+  -- Highlight word under cursor throughout file
+  {
+    'RRethy/vim-illuminate',
+    event = 'VeryLazy',
+    config = function()
+      require('illuminate').configure {
+        delay = 200,
+      }
+    end,
+  }, -- LSP Plugins
   --[[ {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
@@ -703,6 +776,7 @@ require('lazy').setup({
         ts_ls = {},
         -- Add Vue LSP
         ['vue-language-server'] = {},
+        pyright = {}, --Python
       }
 
       -- Ensure the servers and tools above are installed
@@ -724,6 +798,7 @@ require('lazy').setup({
         'prettierd',
         'ruff',
         'vue-language-server',
+        'pyright',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
