@@ -749,16 +749,16 @@ require('lazy').setup({
         --
 
         lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
           settings = {
             Lua = {
-              completion = {
-                callSnippet = 'Replace',
+              completion = { callSnippet = 'Replace' },
+              diagnostics = {
+                globals = { 'vim' }, -- <-- this line tells the linter that 'vim' is a known global
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              workspace = {
+                checkThirdParty = false,
+                library = { vim.env.VIMRUNTIME }, -- helps with Neovim API docs/completion
+              },
             },
           },
         },
