@@ -20,6 +20,11 @@ return {
           ['\\'] = 'close_window',
         },
       },
+      filtered_items = {
+        visible = true, -- show hidden files in the tree
+        hide_dotfiles = false, -- don’t hide dotfiles
+        hide_gitignored = false, -- optional: don’t hide .gitignored files
+      },
     },
   },
 }
